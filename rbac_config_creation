@@ -1,0 +1,34 @@
+-------Generating Certificate and keys----------
+openssl genrsa -out sahil.key 2048
+openssl req -new -key sahil.key -subj "/CN=sahil/O=operation" -out sahil.csr  ##CN is matched when a user communicate with api.
+openssl x509 -req -in sahil.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out sahil.crt -days 365   ##--> Certificate request self-signature ok subject=CN = sahil, O = operation
+-------Formatting-------------------------------
+cat ca.crt | base64 -w 0
+cat sahil.crt | base64 -w 0
+cat sahil.key | base64 -w 0
+
+Put the output of all these cat command output
+in config file with the structure:
+
+------------------------------------------------|
+apiVersion: v1                                  |
+clusters:                                       |
+- cluster:                                      |    
+    certificate-authority-data:                 |
+    server: https://ip_of_master:6443           |
+  name: kubernetes                              |    
+contexts:                                       |                                    
+- context:                                      |    
+    cluster: kubernetes                         |    
+    user:   name_of_user                        |    
+  name:     name_of_user                        |    
+current-context:  name_of_user                  |
+kind: Config                                    |    
+preferences: {}                                 |    
+users:                                          |
+- name: name_of_user                            |    
+  user:                                         |
+    client-certificate-data:                    |
+    client-key-data:                            |
+-------------------------------------------------
+Now this config file can be transfered to bation nodes.
