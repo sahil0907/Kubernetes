@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-j
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      requests:
+        cpu: "399m"  # User specifies Request (300m is between min 100m and max 1000m)
+        memory: "399Mi" # User specifies Request (350Mi is between min 100Mi and max 1Gi)
